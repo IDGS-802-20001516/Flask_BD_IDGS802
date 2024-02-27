@@ -1,4 +1,4 @@
-import os 
+import os
 from sqlalchemy import create_engine
 
 class Config(object):
@@ -7,4 +7,4 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG=True
-    SQLALCHEMY_DATABASE_URI='mysql+pymysql://root:@127.0.0.1/bdidgs802'
+    SQLALCHEMY_DATABASE_URI='mysql+pymysql://julian:Alfred2509@127.0.0.1/bdidgs802'
