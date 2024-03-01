@@ -1,4 +1,4 @@
-from flask import Flask, request,render_template,Response
+from flask import Flask, request,render_template,Response,redirect,url_for
 import forms
 from flask_wtf.csrf import CSRFProtect
 from flask import g 
@@ -26,6 +26,46 @@ def index():
         db.session.add(alum)
         db.session.commit()
     return render_template("index.html", form=alum_form)
+
+@app.route("/eliminar",methods=["GET","POST"])
+def eliminar():
+    alumn_form=forms.UserForm2(request.form)
+    if request.method=='GET':
+        id=request.args.get('id')
+        alumn1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
+        alumn_form.id.data=request.args.get('id')
+        alumn_form.nombre.data=alumn1.nombre
+        alumn_form.apaterno.data=alumn1.apaterno
+        alumn_form.email.data=alumn1.email
+    if request.method=='POST':
+        id=alumn_form.id.data
+        alumn=Alumnos.query.get(id)
+        db.session.delete(alumn)
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+    return render_template('eliminar.html',form=alumn_form)
+
+@app.route("/modificar",methods=["GET","POST"])
+def modificar():
+    alumn_form=forms.UserForm2(request.form)
+    if request.method=='GET':
+        id=request.args.get('id')
+        alumn1=db.session.query(Alumnos).filter(Alumnos.id==id).first()
+        alumn_form.id.data=request.args.get('id')
+        alumn_form.nombre.data=alumn1.nombre
+        alumn_form.apaterno.data=alumn1.apaterno
+        alumn_form.email.data=alumn1.email
+    if request.method=='POST':
+        id=alumn_form.id.data
+
+        alumn=db.session.query(Alumnos).filter(Alumnos.id==id).first()
+        alumn.nombre=alumn_form.nombre.data
+        alumn.apaterno=alumn_form.apaterno.data        
+        alumn.email=alumn_form.email.data
+        db.session.add(alumn)
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+    return render_template('modificar.html',form=alumn_form)
 
 
 @app.route("/ABC_Completo",methods=["GET","POST"])
